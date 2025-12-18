@@ -2,6 +2,8 @@
 
 This guide will help you deploy the Exam Platform to production.
 
+> **Quick Start**: For Render-specific instructions, see [RENDER_DEPLOY.md](./RENDER_DEPLOY.md)
+
 ## Prerequisites
 
 - Python 3.11+ installed

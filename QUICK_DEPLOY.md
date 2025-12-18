@@ -1,6 +1,11 @@
 # Quick Deployment Guide
 
-## 🚀 Fastest Way: Railway + Vercel (Recommended)
+## 🚀 Deployment Options
+
+### Option 1: Render (All-in-One) - Easiest
+See [RENDER_DEPLOY.md](./RENDER_DEPLOY.md) for detailed Render deployment instructions.
+
+### Option 2: Railway + Vercel (Recommended for Production)
 
 ### Step 1: Deploy Backend to Railway (5 minutes)
 
