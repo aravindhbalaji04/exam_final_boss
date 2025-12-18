@@ -6,7 +6,7 @@ from pathlib import Path
 
 import jwt  # type: ignore
 import sqlite3
-from fastapi import Depends, FastAPI, File, HTTPException, UploadFile, status
+from fastapi import Depends, FastAPI, File, HTTPException, UploadFile, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from fastapi.staticfiles import StaticFiles
@@ -362,6 +362,7 @@ def health() -> dict:
 
 @app.post("/upload-image")
 async def upload_image(
+    request: Request,
     file: UploadFile = File(...),
     current_user: dict = Depends(get_current_user),
 ) -> dict:
@@ -385,8 +386,14 @@ async def upload_image(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to save file: {str(e)}")
 
-    # Return URL path (frontend will construct full URL)
-    return {"url": f"http://127.0.0.1:4000/uploads/{unique_filename}"}
+    # Construct base URL from request or environment variable
+    # Get the base URL from the request (works in production)
+    base_url = os.getenv("BACKEND_URL")
+    if not base_url:
+        # Construct from request - get scheme and host
+        base_url = str(request.base_url).rstrip("/")
+    
+    return {"url": f"{base_url}/uploads/{unique_filename}"}
 
 
 @app.post("/auth/register", response_model=TokenResponse)
