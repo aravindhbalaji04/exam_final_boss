@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import './exam-layout.css'
 import { StudentDetailsForm } from './StudentDetailsForm'
+import { API_ENDPOINTS } from '../config'
 
 type QuestionStatus = 'notVisited' | 'notAnswered' | 'answered' | 'marked' | 'answeredMarked'
 
@@ -68,7 +69,7 @@ export const ExamLayout: React.FC<{ examId: number }> = ({ examId }) => {
         setLoading(true)
         setError(null)
 
-        const res = await fetch(`http://127.0.0.1:4000/exams/${examId}`)
+        const res = await fetch(API_ENDPOINTS.EXAMS.GET(examId))
 
         if (!res.ok) {
           const text = await res.text()
@@ -121,7 +122,7 @@ export const ExamLayout: React.FC<{ examId: number }> = ({ examId }) => {
       let success = false
       
       // Try standard fullscreen API first
-      if (element.requestFullscreen) {
+      if (element.requestFullscreen) {  
         try {
           await element.requestFullscreen()
           success = true
@@ -207,7 +208,7 @@ export const ExamLayout: React.FC<{ examId: number }> = ({ examId }) => {
       // Start attempt with student details FIRST (before showing exam)
       let attemptRes: Response
       try {
-        attemptRes = await fetch('http://127.0.0.1:4000/attempts', {
+        attemptRes = await fetch(API_ENDPOINTS.ATTEMPTS.CREATE, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -223,7 +224,7 @@ export const ExamLayout: React.FC<{ examId: number }> = ({ examId }) => {
       } catch (fetchErr) {
         // Network error (backend not reachable)
         console.error('Network error:', fetchErr)
-        throw new Error('Cannot connect to server. Please make sure the backend server is running on http://127.0.0.1:4000')
+        throw new Error('Cannot connect to server. Please check your internet connection and try again.')
       }
 
       if (!attemptRes.ok) {
@@ -309,7 +310,7 @@ export const ExamLayout: React.FC<{ examId: number }> = ({ examId }) => {
         // Report to backend
         if (attemptId) {
           try {
-            await fetch(`http://127.0.0.1:4000/attempts/${attemptId}/fullscreen-exit`, {
+            await fetch(API_ENDPOINTS.ATTEMPTS.FULLSCREEN_EXIT(attemptId), {
               method: 'POST',
             })
           } catch (err) {
@@ -389,7 +390,7 @@ export const ExamLayout: React.FC<{ examId: number }> = ({ examId }) => {
                 : null,
           }))
 
-          const submitRes = await fetch(`http://127.0.0.1:4000/attempts/${attemptId}/submit`, {
+          const submitRes = await fetch(API_ENDPOINTS.ATTEMPTS.SUBMIT(attemptId), {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -401,7 +402,7 @@ export const ExamLayout: React.FC<{ examId: number }> = ({ examId }) => {
             setSubmitted(true)
             // Fetch results
             try {
-              const resultsRes = await fetch(`http://127.0.0.1:4000/attempts/${attemptId}/results`)
+              const resultsRes = await fetch(API_ENDPOINTS.ATTEMPTS.RESULTS(attemptId))
               if (resultsRes.ok) {
                 const resultsData = await resultsRes.json()
                 setResults({
@@ -594,7 +595,7 @@ export const ExamLayout: React.FC<{ examId: number }> = ({ examId }) => {
             : null,
       }))
 
-      const res = await fetch(`http://127.0.0.1:4000/attempts/${attemptId}/submit`, {
+      const res = await fetch(API_ENDPOINTS.ATTEMPTS.SUBMIT(attemptId), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -611,7 +612,7 @@ export const ExamLayout: React.FC<{ examId: number }> = ({ examId }) => {
 
       // Fetch results
       try {
-        const resultsRes = await fetch(`http://127.0.0.1:4000/attempts/${attemptId}/results`)
+        const resultsRes = await fetch(API_ENDPOINTS.ATTEMPTS.RESULTS(attemptId))
         if (resultsRes.ok) {
           const resultsData = await resultsRes.json()
           setResults({

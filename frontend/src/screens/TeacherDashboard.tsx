@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import './teacher.css'
+import { API_ENDPOINTS } from '../config'
 
 type Exam = {
   id: number
@@ -33,7 +34,7 @@ export const TeacherDashboard: React.FC = () => {
           return
         }
 
-        const res = await fetch('http://127.0.0.1:4000/exams', {
+        const res = await fetch(API_ENDPOINTS.EXAMS.LIST, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -68,7 +69,7 @@ export const TeacherDashboard: React.FC = () => {
     }
 
     try {
-      const res = await fetch('http://127.0.0.1:4000/exams', {
+      const res = await fetch(API_ENDPOINTS.EXAMS.CREATE, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

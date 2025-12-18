@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import './teacher.css'
+import { API_ENDPOINTS } from '../config'
 
 type Attempt = {
   attempt_id: number
@@ -57,7 +58,7 @@ export const TeacherAnalytics: React.FC<{ examId: string }> = ({ examId }) => {
           return
         }
 
-        const res = await fetch(`http://127.0.0.1:4000/exams/${examId}/attempts`, {
+        const res = await fetch(API_ENDPOINTS.EXAMS.ATTEMPTS(Number(examId)), {
           headers: {
             Authorization: `Bearer ${token}`,
           },

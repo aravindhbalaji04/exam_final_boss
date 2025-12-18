@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import './exam-selection.css'
+import { API_ENDPOINTS } from '../config'
 
 type Exam = {
   id: number
@@ -20,7 +21,7 @@ export const ExamSelection: React.FC = () => {
         setLoading(true)
         setError(null)
 
-        const res = await fetch('http://127.0.0.1:4000/exams')
+        const res = await fetch(API_ENDPOINTS.EXAMS.LIST)
         if (!res.ok) {
           throw new Error('Failed to load exams')
         }

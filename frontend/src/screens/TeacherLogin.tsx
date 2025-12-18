@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import './teacher.css'
+import { API_ENDPOINTS } from '../config'
 
 export const TeacherLogin: React.FC = () => {
   const [email, setEmail] = useState('')
@@ -13,7 +14,7 @@ export const TeacherLogin: React.FC = () => {
     setError(null)
 
     try {
-      const res = await fetch('http://127.0.0.1:4000/auth/login', {
+      const res = await fetch(API_ENDPOINTS.AUTH.LOGIN, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -73,7 +74,7 @@ export const TeacherLogin: React.FC = () => {
         </form>
         <p className="hint">
           Don't have an account? Register via{' '}
-          <a href="http://127.0.0.1:4000/docs" target="_blank" rel="noopener noreferrer">
+          <a href={API_ENDPOINTS.DOCS} target="_blank" rel="noopener noreferrer">
             Swagger
           </a>
         </p>

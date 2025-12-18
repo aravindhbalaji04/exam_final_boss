@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import './teacher.css'
+import { API_ENDPOINTS } from '../config'
 
 type Question = {
   id: number
@@ -39,7 +40,7 @@ export const AddQuestions: React.FC<{ examId: number }> = ({ examId }) => {
         if (token) {
           headers.Authorization = `Bearer ${token}`
         }
-        const res = await fetch(`http://127.0.0.1:4000/exams/${examId}`, { headers })
+        const res = await fetch(API_ENDPOINTS.EXAMS.GET(examId), { headers })
         if (!res.ok) throw new Error('Failed to load exam')
         const data = await res.json()
         setExamInfo({ title: data.title, subject: data.subject })
@@ -90,7 +91,7 @@ export const AddQuestions: React.FC<{ examId: number }> = ({ examId }) => {
       const formData = new FormData()
       formData.append('file', file)
 
-      const res = await fetch('http://127.0.0.1:4000/upload-image', {
+      const res = await fetch(API_ENDPOINTS.UPLOAD.IMAGE, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -141,8 +142,8 @@ export const AddQuestions: React.FC<{ examId: number }> = ({ examId }) => {
     try {
       const isEditing = editingQuestionId !== null
       const url = isEditing
-        ? `http://127.0.0.1:4000/exams/${examId}/questions/${editingQuestionId}`
-        : `http://127.0.0.1:4000/exams/${examId}/questions`
+        ? API_ENDPOINTS.EXAMS.QUESTION(examId, editingQuestionId)
+        : API_ENDPOINTS.EXAMS.QUESTIONS(examId)
 
       const res = await fetch(url, {
         method: isEditing ? 'PUT' : 'POST',
@@ -225,7 +226,7 @@ export const AddQuestions: React.FC<{ examId: number }> = ({ examId }) => {
     }
 
     try {
-      const res = await fetch(`http://127.0.0.1:4000/exams/${examId}/questions/${questionId}`, {
+      const res = await fetch(API_ENDPOINTS.EXAMS.QUESTION(examId, questionId), {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`,
